@@ -69,12 +69,10 @@ namespace Chatter.Server
             try
             {
                 var stream = client.GetStream();
-                var bytes = new byte[4096];
                 while (true)
                 {
-                    stream.Read(bytes, 0, bytes.Length);
-                    //var text = Encoding.UTF8.GetString(bytes);
-                    //_output.Write(text);
+                    var packet = _packetFactory.CreatePacket(client.GetStream());
+                    _mediator.Send(packet);
                 }
             }
             catch (Exception)

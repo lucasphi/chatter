@@ -9,10 +9,14 @@ namespace Chatter.Client.Handlers
     public class RegisterResultRequestHandler : IRequestHandler<RegisterResultRequest, RequestResult>
     {
         private readonly IMediator _mediator;
+        private readonly IClient _client;
 
-        public RegisterResultRequestHandler(IMediator mediator)
+        public RegisterResultRequestHandler(
+            IMediator mediator,
+            IClient client)
         {
             _mediator = mediator;
+            _client = client;
         }
 
         public Task<RequestResult> Handle(RegisterResultRequest request, CancellationToken cancellationToken)
@@ -21,6 +25,7 @@ namespace Chatter.Client.Handlers
             {
                 _mediator.Send(new PrintMessageRequest($"You are registered as {request.Nickname}"));
                 _mediator.Send(new PrintMessageRequest($"Type /help to see the list of all available commands"));
+                _client.AwaitCommand();
             }
             else
             {

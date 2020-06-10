@@ -58,14 +58,17 @@ namespace Chatter.Client
         {
             ThreadPool.QueueUserWorkItem((state) =>
             {
-                var command = Console.ReadLine();
-                if (command.StartsWith("/help"))
+                while (true)
                 {
+                    var command = Console.ReadLine();
+                    if (command.StartsWith("/help"))
+                    {
 
-                }
-                else
-                {
-
+                    }
+                    else
+                    {
+                        _mediator.Send(new ChatMessageRequest(command));
+                    }
                 }
             });
         }
