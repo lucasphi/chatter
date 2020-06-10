@@ -63,7 +63,8 @@ namespace Chatter.Client
                     var command = Console.ReadLine();
                     if (command.StartsWith("/help"))
                     {
-
+                        _mediator.Send(new PrintMessageRequest(
+                            "Available commands: \n/help (Display help)\n/m nickname message (Sends a public message to someone)\n/p nickname message (Sends a private message to someone)"));
                     }
                     else
                     {
