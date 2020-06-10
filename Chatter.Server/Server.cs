@@ -39,10 +39,10 @@ namespace Chatter.Server
 
         private void StartListeningForConnections(TcpListener tcpListener)
         {
-            while(true)
+            while (true)
             {
                 var client = tcpListener.AcceptTcpClient();
-                ThreadPool.QueueUserWorkItem(AwaitClientHandshake, client, true);                
+                ThreadPool.QueueUserWorkItem(AwaitClientHandshake, client, true);
             }
         }
 
@@ -56,7 +56,7 @@ namespace Chatter.Server
                     var packet = _packetFactory.CreatePacket(client.GetStream()) as RegisterRequest;
                     _clientList.AddConnectingClient(packet.UniqueId, client.GetStream());
                     createUserResult = _mediator.Send(packet).Result;
-                } while (!createUserResult.Success);                
+                } while (!createUserResult.Success);
 
                 HandleClientConnection(client);
             }
@@ -66,9 +66,10 @@ namespace Chatter.Server
 
         private void HandleClientConnection(TcpClient client)
         {
+            NetworkStream stream = null;
             try
             {
-                var stream = client.GetStream();
+                stream = client.GetStream();
                 while (true)
                 {
                     var packet = _packetFactory.CreatePacket(client.GetStream());
@@ -77,8 +78,22 @@ namespace Chatter.Server
             }
             catch (Exception)
             {
-                //_clients.Remove();
-            }            
+                RemoveClient(stream);
+            }
+        }
+
+        private void RemoveClient(NetworkStream stream)
+        {
+            if (stream != null)
+            {
+                foreach (var item in _clientList.Clients)
+                {
+                    if (item.Value == stream)
+                    {
+                        _clientList.Clients.TryRemove(item.Key, out _);
+                    }
+                }
+            }
         }
     }
 }

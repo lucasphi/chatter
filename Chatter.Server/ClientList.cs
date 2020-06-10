@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
 
@@ -6,13 +7,13 @@ namespace Chatter.Server
 {
     public class ClientList : IClientList
     {
-        public Dictionary<string, NetworkStream> Clients { get; } = new Dictionary<string, NetworkStream>();
+        public ConcurrentDictionary<string, NetworkStream> Clients { get; } = new ConcurrentDictionary<string, NetworkStream>();
 
         private Dictionary<Guid, NetworkStream> JoinClients { get; } = new Dictionary<Guid, NetworkStream>();
 
         public void PromoteClient(string nickname, Guid uniqueId)
         {
-            Clients.Add(nickname, JoinClients[uniqueId]);
+            Clients.TryAdd(nickname, JoinClients[uniqueId]);
             JoinClients.Remove(uniqueId);
         }
 

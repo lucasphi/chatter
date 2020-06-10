@@ -58,13 +58,21 @@ namespace Chatter.Client
         {
             ThreadPool.QueueUserWorkItem((state) =>
             {
-                while (true)
+                var running = true;
+                while (running)
                 {
                     var command = Console.ReadLine();
                     if (command.StartsWith("/help"))
                     {
                         _mediator.Send(new PrintMessageRequest(
-                            "Available commands: \n/help (Display help)\n/m nickname message (Sends a public message to someone)\n/p nickname message (Sends a private message to someone)"));
+                            "*** Available commands: \n/help (Display help)\n/m nickname message (Sends a public message to someone)" +
+                            "\n/p nickname message (Sends a private message to someone)\n/exit (Disconnects)\n***"));
+                    }
+                    else if(command.StartsWith("/exit"))
+                    {
+                        Stream.Close();
+                        running = false;
+                        _mediator.Send(new PrintMessageRequest("*** Disconnected"));
                     }
                     else
                     {
