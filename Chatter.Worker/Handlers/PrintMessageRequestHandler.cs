@@ -1,12 +1,10 @@
-﻿using Chatter.Worker;
+﻿using Chatter.Worker.Requests;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Chatter.Worker.Requests
+namespace Chatter.Worker.Handlers
 {
     public class PrintMessageRequestHandler : IRequestHandler<PrintMessageRequest>
     {

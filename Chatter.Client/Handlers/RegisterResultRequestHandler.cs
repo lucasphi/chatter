@@ -1,0 +1,32 @@
+﻿using Chatter.Worker;
+using Chatter.Worker.Network;
+using Chatter.Worker.Requests;
+using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Chatter.Client.Handlers
+{
+    public class RegisterResultRequestHandler : IRequestHandler<RegisterResultRequest, SocketResult>
+    {
+        private readonly IMediator _mediator;
+
+        public RegisterResultRequestHandler(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        public Task<SocketResult> Handle(RegisterResultRequest request, CancellationToken cancellationToken)
+        {            
+            if (request.Registered)
+            {
+                _mediator.Send(new PrintMessageRequest($"You are registered as {request.Nickname}"));
+            }
+            else
+            {
+                _mediator.Send(new PrintMessageRequest($"*** Sorry, the nickname {request.Nickname} is already taken. Please choose a different one:"));
+            }
+            return Task.FromResult(new SocketResult() { Success = request.Registered });
+        }
+    }
+}

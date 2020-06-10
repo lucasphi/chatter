@@ -2,7 +2,6 @@
 using Chatter.Worker.Requests;
 using MediatR;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -13,7 +12,6 @@ namespace Chatter.Server
     {
         private readonly IMediator _mediator;
         private readonly IPacketFactory _packetFactory;
-        private readonly Dictionary<string, TcpClient> _clients = new Dictionary<string, TcpClient>();
 
         public Server(
             IMediator mediator,
@@ -49,17 +47,18 @@ namespace Chatter.Server
             try
             {
                 var packet = _packetFactory.CreatePacket(client.GetStream()) as RegisterRequest;
-                _mediator.Send(new RegisterResultRequest(!_clients.ContainsKey(packet.Message)));
-                if (!_clients.ContainsKey(packet.Message))
+                packet.Stream = client.GetStream();
+                var createUserResult = _mediator.Send(packet).Result;
+                if (createUserResult.Success)
                 {
-                    HandleClientConnection(packet.Message, client);
+                    HandleClientConnection(client);
                 }
             }
             catch (Exception)
             { }
         }
 
-        private void HandleClientConnection(string nickname, TcpClient client)
+        private void HandleClientConnection(TcpClient client)
         {
             try
             {
@@ -74,7 +73,7 @@ namespace Chatter.Server
             }
             catch (Exception)
             {
-                _clients.Remove(nickname);
+                //_clients.Remove();
             }            
         }
     }

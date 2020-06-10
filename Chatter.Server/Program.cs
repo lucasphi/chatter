@@ -23,11 +23,12 @@ namespace Chatter.Server
 
         private static void RegisterContainerTypes(ContainerBuilder builder)
         {
-            builder.AddMediatR(typeof(IStream).Assembly);
-            builder.RegisterType<Server>().SingleInstance().AsSelf();
+            builder.AddMediatR(typeof(Program).Assembly, typeof(IStream).Assembly);
+            builder.RegisterType<Server>().AsSelf().SingleInstance();
             builder.RegisterType<PacketWriter>().As<IPacketWriter>();
             builder.RegisterType<PacketReader>().As<IPacketReader>();
             builder.RegisterType<PacketFactory>().As<IPacketFactory>();
+            builder.RegisterType<ClientList>().As<IClientList>().SingleInstance();
         }
     }
 }

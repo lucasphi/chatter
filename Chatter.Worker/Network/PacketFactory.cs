@@ -22,6 +22,7 @@ namespace Chatter.Worker.Network
             return packetId switch
             {
                 1 => new RegisterRequest(_packetReader, stream),
+                2 => new RegisterResultRequest(_packetReader, stream),
                 _ => throw new InvalidPacketException(),
             };
         }

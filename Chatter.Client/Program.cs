@@ -12,10 +12,8 @@ namespace Chatter.Client
         static async Task Main(string[] args)
         {
             IContainer container = CreateContainer();
-            var client = container.Resolve<Client>();
+            var client = container.Resolve<IClient>();
             await client.Connect("127.0.0.1", 5000);
-
-            var text = Console.ReadLine();
         }
 
         private static IContainer CreateContainer()
@@ -27,8 +25,8 @@ namespace Chatter.Client
 
         private static void RegisterContainerTypes(ContainerBuilder builder)
         {
-            builder.AddMediatR(typeof(IStream).Assembly);
-            builder.RegisterType<Client>().SingleInstance().AsSelf().As<IStream>();
+            builder.AddMediatR(typeof(Program).Assembly, typeof(IStream).Assembly);
+            builder.RegisterType<Client>().As<IStream>().As<IClient>().SingleInstance();
             builder.RegisterType<PacketWriter>().As<IPacketWriter>();
             builder.RegisterType<PacketReader>().As<IPacketReader>();
             builder.RegisterType<PacketFactory>().As<IPacketFactory>();

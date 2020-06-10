@@ -9,11 +9,11 @@ namespace Chatter.Worker.Requests
     {
         public override byte PacketId => 1;
 
-        public string Message { get; set; }
+        public string Nickname { get; set; }
 
         public RegisterRequest(string username)
         {
-            Message = username;
+            Nickname = username;
         }
 
         public RegisterRequest(IPacketReader packetReader, NetworkStream stream)
@@ -23,7 +23,7 @@ namespace Chatter.Worker.Requests
             var lenght = packetReader.ConvertByteArrayToInt(bytes);
             var data = new byte[lenght];
             stream.Read(data, 0, data.Length);
-            Message = Encoding.UTF8.GetString(data);
+            Nickname = Encoding.UTF8.GetString(data);
         }
     }
 }

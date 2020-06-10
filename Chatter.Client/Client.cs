@@ -1,8 +1,10 @@
 ﻿using Chatter.Worker.Exceptions;
+using Chatter.Worker.Network;
 using Chatter.Worker.Requests;
 using MediatR;
 using System;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Chatter.Client
@@ -10,13 +12,17 @@ namespace Chatter.Client
     class Client : IClient
     {
         private readonly IMediator _mediator;
+        private readonly IPacketFactory _packetFactory;
         private TcpClient _client;
 
         public NetworkStream Stream { get; private set; }
 
-        public Client(IMediator mediator)
+        public Client(
+            IMediator mediator,
+            IPacketFactory packetFactory)
         {
             _mediator = mediator;
+            _packetFactory = packetFactory;
         }
 
         public async Task Connect(string server, int port)
@@ -29,23 +35,24 @@ namespace Chatter.Client
             _client = new TcpClient(server, port);
             Stream = _client.GetStream();
             await RegisterClient();
+
+            HandleConnection();
         }
 
         private async Task RegisterClient()
         {
-            await _mediator.Send(new PrintMessageRequest("*** Welcome to our chat server. Please provide a nickname"));            
-            bool registered;
-            string nickname;
-            do
+            await _mediator.Send(new PrintMessageRequest("*** Welcome to our chat server. Please provide a nickname"));
+            string nickname = Console.ReadLine();
+            await _mediator.Send(new RegisterRequest(nickname));
+        }
+
+        private void HandleConnection()
+        {
+            while(true)
             {
-                nickname = Console.ReadLine();
-                registered = (await _mediator.Send(new RegisterRequest(nickname))).Success;
-                if (!registered)
-                {
-                    await _mediator.Send(new PrintMessageRequest($"*** Sorry, the nickname {nickname} is already taken. Please choose a different one:"));
-                }
-            } while (!registered);
-            await _mediator.Send(new PrintMessageRequest($"You are registered as {nickname}"));
+                var packet = _packetFactory.CreatePacket(_client.GetStream());
+                _mediator.Send(packet);
+            }
         }
     }
 }
