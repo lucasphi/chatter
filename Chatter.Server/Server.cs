@@ -1,4 +1,5 @@
-﻿using Chatter.Worker.Network;
+﻿using Chatter.Worker;
+using Chatter.Worker.Network;
 using Chatter.Worker.Requests;
 using MediatR;
 using System;
@@ -49,7 +50,7 @@ namespace Chatter.Server
         {
             try
             {
-                SocketResult createUserResult;
+                RequestResult createUserResult;
                 do
                 {
                     var packet = _packetFactory.CreatePacket(client.GetStream()) as RegisterRequest;

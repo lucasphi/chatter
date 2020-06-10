@@ -5,6 +5,6 @@ namespace Chatter.Worker.Network
 {
     public interface IPacketFactory
     {
-        IRequest<SocketResult> CreatePacket(NetworkStream stream);
+        IRequest<RequestResult> CreatePacket(NetworkStream stream);
     }
 }

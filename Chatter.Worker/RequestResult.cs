@@ -1,6 +1,6 @@
-﻿namespace Chatter.Worker.Network
+﻿namespace Chatter.Worker
 {
-    public class SocketResult
+    public class RequestResult
     {
         public bool Success { get; set; }
 

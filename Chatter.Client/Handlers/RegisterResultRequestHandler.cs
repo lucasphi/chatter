@@ -1,4 +1,4 @@
-﻿using Chatter.Worker.Network;
+﻿using Chatter.Worker;
 using Chatter.Worker.Requests;
 using MediatR;
 using System.Threading;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chatter.Client.Handlers
 {
-    public class RegisterResultRequestHandler : IRequestHandler<RegisterResultRequest, SocketResult>
+    public class RegisterResultRequestHandler : IRequestHandler<RegisterResultRequest, RequestResult>
     {
         private readonly IMediator _mediator;
 
@@ -15,7 +15,7 @@ namespace Chatter.Client.Handlers
             _mediator = mediator;
         }
 
-        public Task<SocketResult> Handle(RegisterResultRequest request, CancellationToken cancellationToken)
+        public Task<RequestResult> Handle(RegisterResultRequest request, CancellationToken cancellationToken)
         {            
             if (request.Registered)
             {
@@ -27,7 +27,7 @@ namespace Chatter.Client.Handlers
                 _mediator.Send(new PrintMessageRequest($"*** Sorry, the nickname {request.Nickname} is already taken. Please choose a different one:"));
                 _mediator.Send(new RegisterRequest());
             }
-            return Task.FromResult(new SocketResult() { Success = request.Registered });
+            return Task.FromResult(new RequestResult() { Success = request.Registered });
         }
     }
 }

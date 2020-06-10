@@ -2,7 +2,9 @@
 using Chatter.Worker.Network;
 using Chatter.Worker.Requests;
 using MediatR;
+using System;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Chatter.Client
@@ -50,6 +52,22 @@ namespace Chatter.Client
                 var packet = _packetFactory.CreatePacket(_client.GetStream());
                 _mediator.Send(packet);
             }
+        }
+
+        public void AwaitCommand()
+        {
+            ThreadPool.QueueUserWorkItem((state) =>
+            {
+                var command = Console.ReadLine();
+                if (command.StartsWith("/help"))
+                {
+
+                }
+                else
+                {
+
+                }
+            });
         }
     }
 }

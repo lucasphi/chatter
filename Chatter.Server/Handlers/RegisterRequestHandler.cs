@@ -1,4 +1,4 @@
-﻿using Chatter.Worker.Network;
+﻿using Chatter.Worker;
 using Chatter.Worker.Requests;
 using MediatR;
 using System.Threading;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chatter.Server.Handlers
 {
-    class RegisterRequestHandler : IRequestHandler<RegisterRequest, SocketResult>
+    class RegisterRequestHandler : IRequestHandler<RegisterRequest, RequestResult>
     {
         private readonly IClientList _clientList;
         private readonly IMediator _mediator;
@@ -19,7 +19,7 @@ namespace Chatter.Server.Handlers
             _mediator = mediator;
         }
 
-        public async Task<SocketResult> Handle(RegisterRequest request, CancellationToken cancellationToken)
+        public async Task<RequestResult> Handle(RegisterRequest request, CancellationToken cancellationToken)
         {
             bool nicknameIsFree = !_clientList.Clients.ContainsKey(request.Nickname);                        
             await _mediator.Send(new RegisterResultRequest(nicknameIsFree, request.Nickname, request.UniqueId));
@@ -27,7 +27,7 @@ namespace Chatter.Server.Handlers
             {
                 _clientList.PromoteClient(request.Nickname, request.UniqueId);
             }
-            return new SocketResult() { Success = nicknameIsFree };
+            return new RequestResult() { Success = nicknameIsFree };
         }
     }
 }

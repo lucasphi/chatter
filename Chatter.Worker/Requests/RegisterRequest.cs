@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Chatter.Worker.Requests
 {
-    public class RegisterRequest : Packet, IRequest<SocketResult>
+    public class RegisterRequest : Packet, IRequest<RequestResult>
     {
         public override byte PacketId => 1;
 

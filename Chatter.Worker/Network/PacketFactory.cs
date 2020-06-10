@@ -14,7 +14,7 @@ namespace Chatter.Worker.Network
             _packetReader = packetReader;
         }
 
-        public IRequest<SocketResult> CreatePacket(NetworkStream stream)
+        public IRequest<RequestResult> CreatePacket(NetworkStream stream)
         {
             var bytes = new byte[1];
             stream.Read(bytes, 0, bytes.Length);

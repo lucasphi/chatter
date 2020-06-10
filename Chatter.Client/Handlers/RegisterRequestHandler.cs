@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Chatter.Client.Handlers
 {
-    class RegisterRequestHandler : IRequestHandler<RegisterRequest, SocketResult>
+    class RegisterRequestHandler : IRequestHandler<RegisterRequest, RequestResult>
     {
         private readonly IStream _stream;
         private readonly IPacketWriter _packetWriter;
@@ -21,12 +21,12 @@ namespace Chatter.Client.Handlers
             _packetWriter = packetWriter;
         }
 
-        public Task<SocketResult> Handle(RegisterRequest request, CancellationToken cancellationToken)
+        public Task<RequestResult> Handle(RegisterRequest request, CancellationToken cancellationToken)
         {
             string nickname = Console.ReadLine();
             byte[] packet = ConvertRequestToByteArray(request, nickname);
             _stream.Stream.Write(packet, 0, packet.Length);
-            return Task.FromResult(new SocketResult() { Success = true });
+            return Task.FromResult(new RequestResult() { Success = true });
         }
 
         private byte[] ConvertRequestToByteArray(RegisterRequest request, string nickname)
