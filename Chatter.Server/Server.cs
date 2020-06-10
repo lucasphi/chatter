@@ -12,13 +12,16 @@ namespace Chatter.Server
     {
         private readonly IMediator _mediator;
         private readonly IPacketFactory _packetFactory;
+        private readonly IClientList _clientList;
 
         public Server(
             IMediator mediator,
-            IPacketFactory packetFactory)
+            IPacketFactory packetFactory,
+            IClientList clientList)
         {
             _mediator = mediator;
             _packetFactory = packetFactory;
+            _clientList = clientList;
         }
 
         public void Run(string ipAddress, int port)
@@ -46,13 +49,15 @@ namespace Chatter.Server
         {
             try
             {
-                var packet = _packetFactory.CreatePacket(client.GetStream()) as RegisterRequest;
-                packet.Stream = client.GetStream();
-                var createUserResult = _mediator.Send(packet).Result;
-                if (createUserResult.Success)
+                SocketResult createUserResult;
+                do
                 {
-                    HandleClientConnection(client);
-                }
+                    var packet = _packetFactory.CreatePacket(client.GetStream()) as RegisterRequest;
+                    _clientList.AddConnectingClient(packet.UniqueId, client.GetStream());
+                    createUserResult = _mediator.Send(packet).Result;
+                } while (!createUserResult.Success);                
+
+                HandleClientConnection(client);
             }
             catch (Exception)
             { }

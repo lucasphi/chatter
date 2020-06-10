@@ -21,18 +21,13 @@ namespace Chatter.Server.Handlers
 
         public async Task<SocketResult> Handle(RegisterRequest request, CancellationToken cancellationToken)
         {
-            bool nicknameIsFree = !_clientList.Clients.ContainsKey(request.Nickname);            
+            bool nicknameIsFree = !_clientList.Clients.ContainsKey(request.Nickname);                        
+            await _mediator.Send(new RegisterResultRequest(nicknameIsFree, request.Nickname, request.UniqueId));
             if (nicknameIsFree)
             {
-                AddClientToClientList(request);
+                _clientList.PromoteClient(request.Nickname, request.UniqueId);
             }
-            await _mediator.Send(new RegisterResultRequest(nicknameIsFree, request.Nickname));
             return new SocketResult() { Success = nicknameIsFree };
-        }
-
-        private void AddClientToClientList(RegisterRequest request)
-        {
-            _clientList.Clients.Add(request.Nickname, request.Stream);
         }
     }
 }

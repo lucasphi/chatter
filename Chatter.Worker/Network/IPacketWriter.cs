@@ -1,4 +1,6 @@
-﻿namespace Chatter.Worker.Network
+﻿using System;
+
+namespace Chatter.Worker.Network
 {
     public interface IPacketWriter
     {
@@ -11,5 +13,7 @@
         void WriteInt(int value);
 
         void WriteString(string value);
+
+        void WriteGuid(Guid value);
     }
 }

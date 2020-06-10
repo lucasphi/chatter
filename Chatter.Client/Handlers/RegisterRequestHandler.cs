@@ -2,6 +2,7 @@
 using Chatter.Worker.Network;
 using Chatter.Worker.Requests;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,16 +23,18 @@ namespace Chatter.Client.Handlers
 
         public Task<SocketResult> Handle(RegisterRequest request, CancellationToken cancellationToken)
         {
-            byte[] packet = ConvertRequestToByteArray(request);
+            string nickname = Console.ReadLine();
+            byte[] packet = ConvertRequestToByteArray(request, nickname);
             _stream.Stream.Write(packet, 0, packet.Length);
             return Task.FromResult(new SocketResult() { Success = true });
         }
 
-        private byte[] ConvertRequestToByteArray(RegisterRequest request)
+        private byte[] ConvertRequestToByteArray(RegisterRequest request, string nickname)
         {            
             _packetWriter.WriteByte(request.PacketId);
-            _packetWriter.WriteInt(request.Nickname.Length);
-            _packetWriter.WriteString(request.Nickname);
+            _packetWriter.WriteGuid(request.UniqueId);
+            _packetWriter.WriteInt(nickname.Length);
+            _packetWriter.WriteString(nickname);
 
             return _packetWriter.GetBytes();
         }

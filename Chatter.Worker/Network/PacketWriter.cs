@@ -39,5 +39,11 @@ namespace Chatter.Worker.Network
         {
             _memoryStream.Write(Encoding.UTF8.GetBytes(value), 0, value.Length);
         }
+
+        public void WriteGuid(Guid value)
+        {
+            byte[] guidBytes = value.ToByteArray();
+            _memoryStream.Write(guidBytes, 0, guidBytes.Length);
+        }
     }
 }

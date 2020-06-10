@@ -18,5 +18,10 @@ namespace Chatter.Worker.Network
         {
             return Convert.ToBoolean(value);
         }
+
+        public Guid ConvertByteArrayToGuid(byte[] bytes)
+        {
+            return new Guid(bytes);
+        }
     }
 }

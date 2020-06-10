@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Chatter.Worker.Network
 {
@@ -9,5 +7,7 @@ namespace Chatter.Worker.Network
         int ConvertByteArrayToInt(byte[] bytes);
 
         bool ConvertByteToBoolean(byte value);
+
+        Guid ConvertByteArrayToGuid(byte[] bytes);
     }
 }

@@ -21,7 +21,7 @@ namespace Chatter.Server.Handlers
 
         public Task<SocketResult> Handle(RegisterResultRequest request, CancellationToken cancellationToken)
         {
-            var stream = _clientList.Clients[request.Nickname];
+            var stream = _clientList.GetConnectingClient(request.UniqueId);
             byte[] packet = ConvertRequestToByteArray(request);
             stream.Write(packet, 0, packet.Length);
             return Task.FromResult(new SocketResult() { Success = true });

@@ -2,9 +2,7 @@
 using Chatter.Worker.Network;
 using Chatter.Worker.Requests;
 using MediatR;
-using System;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Chatter.Client
@@ -42,8 +40,7 @@ namespace Chatter.Client
         private async Task RegisterClient()
         {
             await _mediator.Send(new PrintMessageRequest("*** Welcome to our chat server. Please provide a nickname"));
-            string nickname = Console.ReadLine();
-            await _mediator.Send(new RegisterRequest(nickname));
+            await _mediator.Send(new RegisterRequest());
         }
 
         private void HandleConnection()
