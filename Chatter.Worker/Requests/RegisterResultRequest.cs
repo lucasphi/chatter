@@ -28,17 +28,8 @@ namespace Chatter.Worker.Requests
 
         public RegisterResultRequest(IPacketReader packetReader, NetworkStream stream)
         {
-            var lengthBytes = new byte[4];
-            stream.Read(lengthBytes, 0, 4);
-            var lenght = packetReader.ConvertByteArrayToInt(lengthBytes);
-
-            var data = new byte[lenght];
-            stream.Read(data, 0, data.Length);
-            Nickname = Encoding.UTF8.GetString(data);
-
-            var registered = new byte[1];
-            stream.Read(registered, 0, 1);
-            Registered = packetReader.ConvertByteToBoolean(registered[0]);
+            Nickname = ReadStringFromStream(packetReader, stream);
+            Registered = ReadBooleanFromStream(packetReader, stream);
         }
     }
 }

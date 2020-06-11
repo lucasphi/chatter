@@ -54,7 +54,7 @@ namespace Chatter.Client
             }
         }
 
-        public void AwaitCommand()
+        public void InitializeStreamListeningThread(string nickname)
         {
             ThreadPool.QueueUserWorkItem((state) =>
             {
@@ -62,24 +62,35 @@ namespace Chatter.Client
                 while (running)
                 {
                     var command = Console.ReadLine();
+                    //TODO: split the commands into Requests
                     if (command.StartsWith("/help"))
                     {
-                        _mediator.Send(new PrintMessageRequest(
-                            "*** Available commands: \n/help (Display help)\n/m nickname message (Sends a public message to someone)" +
-                            "\n/p nickname message (Sends a private message to someone)\n/exit (Disconnects)\n***"));
+                        DisplayHelpMessage();
                     }
                     else if(command.StartsWith("/exit"))
                     {
-                        Stream.Close();
+                        CloseConnection();
                         running = false;
-                        _mediator.Send(new PrintMessageRequest("*** Disconnected"));
                     }
                     else
                     {
-                        _mediator.Send(new ChatMessageRequest(command));
+                        _mediator.Send(new OutgoingMessageRequest(nickname, command));
                     }
                 }
             });
+        }
+
+        private void DisplayHelpMessage()
+        {
+            _mediator.Send(new PrintMessageRequest(
+                                        "*** Available commands: \n/help (Display help)\n/m nickname message (Sends a public message to someone)" +
+                                        "\n/p nickname message (Sends a private message to someone)\n/exit (Disconnects)\n***"));
+        }
+
+        private void CloseConnection()
+        {
+            Stream.Close();            
+            _mediator.Send(new PrintMessageRequest("*** Disconnected"));
         }
     }
 }

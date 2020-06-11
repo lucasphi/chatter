@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Chatter.Client.Handlers
 {
-    public class ChatMessageRequestHandler : IRequestHandler<ChatMessageRequest, RequestResult>
+    public class OutgoingMessageRequestHandler : IRequestHandler<OutgoingMessageRequest, RequestResult>
     {
         private readonly IStream _stream;
         private readonly IPacketWriter _packetWriter;
 
-        public ChatMessageRequestHandler(
+        public OutgoingMessageRequestHandler(
             IStream stream,
             IPacketWriter packetWriter)
         {
@@ -20,16 +20,18 @@ namespace Chatter.Client.Handlers
             _packetWriter = packetWriter;
         }
 
-        public Task<RequestResult> Handle(ChatMessageRequest request, CancellationToken cancellationToken)
+        public Task<RequestResult> Handle(OutgoingMessageRequest request, CancellationToken cancellationToken)
         {
             byte[] packet = ConvertRequestToByteArray(request);
             _stream.Stream.Write(packet, 0, packet.Length);
             return Task.FromResult(new RequestResult() { Success = true });
         }
 
-        private byte[] ConvertRequestToByteArray(ChatMessageRequest request)
+        private byte[] ConvertRequestToByteArray(OutgoingMessageRequest request)
         {
             _packetWriter.WriteByte(request.PacketId);
+            _packetWriter.WriteInt(request.Nickname.Length);
+            _packetWriter.WriteString(request.Nickname);
             _packetWriter.WriteInt(request.Message.Length);
             _packetWriter.WriteString(request.Message);
 

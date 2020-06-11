@@ -7,6 +7,6 @@ namespace Chatter.Client
     {
         Task Connect(string server, int port);
 
-        void AwaitCommand();
+        void InitializeStreamListeningThread(string nickname);
     }
 }

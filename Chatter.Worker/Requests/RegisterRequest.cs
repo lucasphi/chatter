@@ -19,17 +19,8 @@ namespace Chatter.Worker.Requests
 
         public RegisterRequest(IPacketReader packetReader, NetworkStream stream)
         {
-            var idBytes = new byte[16];
-            stream.Read(idBytes, 0, idBytes.Length);
-            UniqueId = packetReader.ConvertByteArrayToGuid(idBytes);
-
-            var lengthBytes = new byte[4];
-            stream.Read(lengthBytes, 0, 4);
-            var lenght = packetReader.ConvertByteArrayToInt(lengthBytes);
-
-            var data = new byte[lenght];
-            stream.Read(data, 0, data.Length);
-            Nickname = Encoding.UTF8.GetString(data);
+            UniqueId = ReadGuidFromStream(packetReader, stream);
+            Nickname = ReadStringFromStream(packetReader, stream);
         }
     }
 }

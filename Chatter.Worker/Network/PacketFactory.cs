@@ -23,7 +23,7 @@ namespace Chatter.Worker.Network
             {
                 1 => new RegisterRequest(_packetReader, stream),
                 2 => new RegisterResultRequest(_packetReader, stream),
-                3 => new ChatMessageRequest(_packetReader, stream),
+                3 => new OutgoingMessageRequest(_packetReader, stream),
                 _ => throw new InvalidPacketException(),
             };
         }
