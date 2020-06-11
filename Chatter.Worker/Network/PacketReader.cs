@@ -8,6 +8,11 @@ namespace Chatter.Worker.Network
     {
         public int ConvertByteArrayToInt(byte[] bytes)
         {
+            if (bytes.Length != 4)
+            {
+                throw new ArgumentException("Byte array does not have Int length");
+            }
+
             return (bytes[0] << 24) | 
                    (bytes[1] << 16) | 
                    (bytes[2] << 8) | 
@@ -21,6 +26,11 @@ namespace Chatter.Worker.Network
 
         public Guid ConvertByteArrayToGuid(byte[] bytes)
         {
+            if (bytes.Length != 16)
+            {
+                throw new ArgumentException("Byte array does not have Guid length");
+            }
+
             return new Guid(bytes);
         }
     }
