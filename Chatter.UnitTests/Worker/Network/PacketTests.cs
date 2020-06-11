@@ -22,6 +22,17 @@ namespace Chatter.UnitTests.Worker.Network
         }
 
         [Fact]
+        public void ReadEmptyStringWontThrow()
+        {
+            var streamMock = new MemoryStream(new byte[4] { 0, 0, 0, 0 });
+            var packet = new PacketMock();
+
+            var result = packet.TestReadStringFromStream(new PacketReader(), streamMock);
+
+            result.Should().Be(string.Empty);
+        }
+
+        [Fact]
         public void ReadGuidFromStream()
         {
             var streamMock = new MemoryStream(new byte[16] { 98, 111, 189, 219, 189, 110, 44, 70, 168, 8, 141, 230, 172, 68, 49, 58 });

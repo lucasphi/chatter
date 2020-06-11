@@ -24,12 +24,12 @@ namespace Chatter.UnitTests.Worker.Network
         public void WriteInt()
         {
             var packetWriter = new PacketWriter();
-            var value = 200;
+            var value = 85054308;
 
             packetWriter.WriteInt(value);
             var result = packetWriter.GetBytes();
 
-            result.Should().BeEquivalentTo(new byte[4] { 0, 0, 0, 200 });
+            result.Should().BeEquivalentTo(new byte[4] { 5, 17, 211, 100 });
         }
 
         [Theory]
