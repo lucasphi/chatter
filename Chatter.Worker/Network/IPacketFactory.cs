@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using System.Net.Sockets;
+using System.IO;
 
 namespace Chatter.Worker.Network
 {
     public interface IPacketFactory
     {
-        IRequest<RequestResult> CreatePacket(NetworkStream stream);
+        IRequest<RequestResult> CreatePacket(Stream stream);
     }
 }

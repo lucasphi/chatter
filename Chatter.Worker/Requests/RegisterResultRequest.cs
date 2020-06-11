@@ -1,8 +1,7 @@
 ﻿using Chatter.Worker.Network;
 using MediatR;
 using System;
-using System.Net.Sockets;
-using System.Text;
+using System.IO;
 
 namespace Chatter.Worker.Requests
 {
@@ -26,7 +25,7 @@ namespace Chatter.Worker.Requests
             UniqueId = uniqueId;
         }
 
-        public RegisterResultRequest(IPacketReader packetReader, NetworkStream stream)
+        public RegisterResultRequest(IPacketReader packetReader, Stream stream)
         {
             Nickname = ReadStringFromStream(packetReader, stream);
             Registered = ReadBooleanFromStream(packetReader, stream);

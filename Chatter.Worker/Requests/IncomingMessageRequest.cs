@@ -1,5 +1,6 @@
 ﻿using Chatter.Worker.Network;
 using MediatR;
+using System.IO;
 using System.Net.Sockets;
 
 namespace Chatter.Worker.Requests
@@ -28,7 +29,7 @@ namespace Chatter.Worker.Requests
             PrivateMessage = privateMessage;
         }
 
-        public IncomingMessageRequest(IPacketReader packetReader, NetworkStream stream)
+        public IncomingMessageRequest(IPacketReader packetReader, Stream stream)
         {
             Nickname = ReadStringFromStream(packetReader, stream);
             Message = ReadStringFromStream(packetReader, stream);

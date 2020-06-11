@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Net.Sockets;
+using System.IO;
 using System.Text;
 
 namespace Chatter.Worker.Network
@@ -8,7 +8,7 @@ namespace Chatter.Worker.Network
     {
         public abstract byte PacketId { get; }        
 
-        protected string ReadStringFromStream(IPacketReader packetReader, NetworkStream stream)
+        protected string ReadStringFromStream(IPacketReader packetReader, Stream stream)
         {
             var lengthBytes = new byte[4];
             stream.Read(lengthBytes, 0, 4);
@@ -24,14 +24,14 @@ namespace Chatter.Worker.Network
             return Encoding.UTF8.GetString(data);
         }
 
-        protected Guid ReadGuidFromStream(IPacketReader packetReader, NetworkStream stream)
+        protected Guid ReadGuidFromStream(IPacketReader packetReader, Stream stream)
         {
             var idBytes = new byte[16];
             stream.Read(idBytes, 0, idBytes.Length);
             return packetReader.ConvertByteArrayToGuid(idBytes);
         }
 
-        protected bool ReadBooleanFromStream(IPacketReader packetReader, NetworkStream stream)
+        protected bool ReadBooleanFromStream(IPacketReader packetReader, Stream stream)
         {
             var registered = new byte[1];
             stream.Read(registered, 0, 1);
