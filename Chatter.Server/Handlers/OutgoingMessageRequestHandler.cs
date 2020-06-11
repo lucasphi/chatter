@@ -1,10 +1,9 @@
 ﻿using Chatter.Worker;
+using Chatter.Worker.Exceptions;
 using Chatter.Worker.Network;
 using Chatter.Worker.Requests;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,19 +25,22 @@ namespace Chatter.Server.Handlers
         public Task<RequestResult> Handle(OutgoingMessageRequest request, CancellationToken cancellationToken)
         {
             //TODO: split the commands into Requests
-            if (request.Message.StartsWith("/m"))
+            if (request.PrivateMessage)
             {
-
-            }
-            else if (request.Message.StartsWith("/p"))
-            {
-
-            }
+                SendPrivateMessage(request);
+            }            
             else
             {
                 SendMessageToAllClients(request);
             }
             return Task.FromResult(new RequestResult() { Success = true });
+        }
+
+        private void SendPrivateMessage(OutgoingMessageRequest request)
+        {
+            byte[] packet = ConvertRequestToByteArray(request);
+            _clientList.Clients[request.Nickname].Write(packet, 0, packet.Length);
+            _clientList.Clients[request.Destination].Write(packet, 0, packet.Length);
         }
 
         private void SendMessageToAllClients(OutgoingMessageRequest request)
@@ -52,10 +54,16 @@ namespace Chatter.Server.Handlers
 
         private byte[] ConvertRequestToByteArray(OutgoingMessageRequest request)
         {
-            var reponseRequest = new IncomingMessageRequest(request.Nickname, request.Message);
+            var reponseRequest = new IncomingMessageRequest(request.Nickname, request.Message, request.Destination, request.PrivateMessage);
             _packetWriter.WriteByte(reponseRequest.PacketId);
             _packetWriter.WriteString(reponseRequest.Nickname);
             _packetWriter.WriteString(reponseRequest.Message);
+            _packetWriter.WriteBool(reponseRequest.Destination != null);
+            if (reponseRequest.Destination != null)
+            {                
+                _packetWriter.WriteString(reponseRequest.Destination);
+                _packetWriter.WriteBool(reponseRequest.PrivateMessage);
+            }
             return _packetWriter.GetBytes();
         }
     }

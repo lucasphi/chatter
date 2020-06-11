@@ -14,6 +14,11 @@ namespace Chatter.Worker.Network
             stream.Read(lengthBytes, 0, 4);
             var lenght = packetReader.ConvertByteArrayToInt(lengthBytes);
 
+            if (lenght == 0)
+            {
+                return string.Empty;
+            }
+
             var data = new byte[lenght];
             stream.Read(data, 0, data.Length);
             return Encoding.UTF8.GetString(data);
