@@ -1,0 +1,1 @@
+dotnet stryker --test-projects "['./Chatter.UnitTests/Chatter.UnitTests.csproj']" --reporters "['html', 'progress']"
