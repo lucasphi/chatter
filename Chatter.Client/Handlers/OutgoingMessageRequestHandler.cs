@@ -32,7 +32,6 @@ namespace Chatter.Client.Handlers
             _packetWriter.WriteByte(request.PacketId);
             _packetWriter.WriteString(request.Nickname);
             _packetWriter.WriteString(request.Message);
-
             return _packetWriter.GetBytes();
         }
     }
