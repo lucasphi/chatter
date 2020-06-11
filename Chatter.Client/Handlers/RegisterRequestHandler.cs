@@ -33,7 +33,6 @@ namespace Chatter.Client.Handlers
         {            
             _packetWriter.WriteByte(request.PacketId);
             _packetWriter.WriteGuid(request.UniqueId);
-            _packetWriter.WriteInt(nickname.Length);
             _packetWriter.WriteString(nickname);
 
             return _packetWriter.GetBytes();

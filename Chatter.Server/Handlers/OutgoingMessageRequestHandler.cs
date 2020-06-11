@@ -49,7 +49,6 @@ namespace Chatter.Server.Handlers
         private byte[] ConvertRequestToByteArray(OutgoingMessageRequest request)
         {
             _packetWriter.WriteByte(request.PacketId);
-            _packetWriter.WriteInt(request.Message.Length);
             _packetWriter.WriteString(request.Message);
 
             return _packetWriter.GetBytes();

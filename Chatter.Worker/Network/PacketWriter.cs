@@ -37,6 +37,7 @@ namespace Chatter.Worker.Network
 
         public void WriteString(string value)
         {
+            WriteInt(value.Length);
             _memoryStream.Write(Encoding.UTF8.GetBytes(value), 0, value.Length);
         }
 
