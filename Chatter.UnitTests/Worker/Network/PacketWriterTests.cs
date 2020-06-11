@@ -53,7 +53,8 @@ namespace Chatter.UnitTests.Worker.Network
             packetWriter.WriteString(value);
             var result = packetWriter.GetBytes();
 
-            result.Should().BeEquivalentTo(new byte[28] { 0, 0, 0, 24, 84, 104, 105, 115, 32, 105, 115, 32, 97, 110, 32, 97, 119, 101, 115, 111, 109, 101, 32, 116, 101, 115, 116, 33 });
+            result.Should().BeEquivalentTo(new byte[28] { 0, 0, 0, 24, 84, 104, 105, 115, 32, 105, 115, 32, 97, 110, 
+                32, 97, 119, 101, 115, 111, 109, 101, 32, 116, 101, 115, 116, 33 });
         }
 
         [Fact]
